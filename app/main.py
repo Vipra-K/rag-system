@@ -1,4 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.routes.upload import (
     router as upload_router
@@ -20,15 +24,19 @@ app.include_router(upload_router)
 
 app.include_router(chat_router)
 
+STATIC_DIRECTORY = Path(__file__).parent / "static"
+
+app.mount(
+    "/static",
+    StaticFiles(directory=STATIC_DIRECTORY),
+    name="static"
+)
+
 
 @app.get("/")
 async def home():
 
-    return {
-
-        "message": "RAG System Running"
-
-    }
+    return FileResponse(STATIC_DIRECTORY / "index.html")
 
 
 @app.get("/health")

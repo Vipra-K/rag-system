@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f5">
+  <title>DocChat — Chat with your PDFs</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div class="sidebar-scrim" id="sidebarScrim"></div>
+    <aside class="sidebar" id="sidebar" aria-label="Document sidebar">
+      <div class="brand-row">
+        <a class="brand" href="/" aria-label="DocChat home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 3.75h7.4L19 8.35v11.9H7z"/><path d="M14 3.75v4.7h5M10 12h6M10 15h6"/></svg>
+          </span>
+          <span>DocChat</span>
+        </a>
+        <button class="icon-button mobile-only" id="closeSidebar" aria-label="Close sidebar">
+          <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+
+      <button class="new-chat-button" id="newChatButton">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <span>New chat</span>
+      </button>
+
+      <button class="upload-card" id="uploadButton">
+        <span class="upload-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4.25c0 .97.78 1.75 1.75 1.75h10.5c.97 0 1.75-.78 1.75-1.75V14"/></svg>
+        </span>
+        <span class="upload-copy">
+          <strong>Upload PDF</strong>
+          <small>or drop files anywhere</small>
+        </span>
+      </button>
+      <input id="fileInput" type="file" accept="application/pdf,.pdf" multiple hidden>
+
+      <div class="library-heading">
+        <span>Your documents</span>
+        <button id="selectAllButton" class="text-button">Select all</button>
+      </div>
+      <div class="document-list" id="documentList" aria-live="polite"></div>
+
+      <div class="sidebar-footer">
+        <span class="status-dot"></span>
+        <span>Local knowledge base</span>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <button class="icon-button mobile-only" id="openSidebar" aria-label="Open sidebar">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="conversation-title">
+          <strong>Chat with your PDFs</strong>
+          <span id="scopeLabel">Loading documents…</span>
+        </div>
+        <button class="icon-button" id="clearChatButton" aria-label="Clear conversation" title="Clear conversation">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5M14 11v5"/></svg>
+        </button>
+      </header>
+
+      <section class="conversation" id="conversation" aria-live="polite">
+        <div class="welcome" id="welcome">
+          <div class="welcome-mark">
+            <svg viewBox="0 0 32 32"><path d="M8 4.5h10l6 6v17H8z"/><path d="M18 4.5v6h6M12 16h8M12 20h6"/></svg>
+          </div>
+          <h1>Ask your documents anything.</h1>
+          <p>Upload PDFs, choose what to search, and get grounded answers with page references.</p>
+          <div class="suggestion-grid">
+            <button class="suggestion" data-question="Summarize the main ideas in these documents.">
+              <span>Summarize</span>
+              <small>Give me the main ideas</small>
+            </button>
+            <button class="suggestion" data-question="What are the most important topics covered?">
+              <span>Explore topics</span>
+              <small>Find the key subjects</small>
+            </button>
+            <button class="suggestion" data-question="Create a concise study guide from these documents.">
+              <span>Study guide</span>
+              <small>Organize what I should learn</small>
+            </button>
+          </div>
+        </div>
+        <div class="message-stream" id="messageStream"></div>
+      </section>
+
+      <footer class="composer-area">
+        <div class="scope-pill" id="scopePill">
+          <svg viewBox="0 0 24 24"><path d="M7 3.5h7l4 4v13H7zM14 3.5v4h4"/></svg>
+          <span id="composerScope">No documents selected</span>
+        </div>
+        <div class="composer" id="composer">
+          <textarea id="questionInput" rows="1" maxlength="2000" placeholder="Ask a question about your PDFs…" aria-label="Question"></textarea>
+          <button class="send-button" id="sendButton" aria-label="Send message" disabled>
+            <svg viewBox="0 0 24 24"><path d="M12 19V5m0 0L6.5 10.5M12 5l5.5 5.5"/></svg>
+          </button>
+        </div>
+        <p class="composer-note">Answers are generated from selected documents. Verify important details against the cited pages.</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="drop-overlay" id="dropOverlay">
+    <div>
+      <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4.25c0 .97.78 1.75 1.75 1.75h10.5c.97 0 1.75-.78 1.75-1.75V14"/></svg>
+      <strong>Drop PDFs to upload</strong>
+      <span>You can add more than one file</span>
+    </div>
+  </div>
+  <div class="toast-region" id="toastRegion" aria-live="assertive"></div>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

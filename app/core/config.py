@@ -6,6 +6,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def _env_number(name, default, cast):
+
+    value = os.getenv(name)
+
+    if value is None:
+        return cast(default)
+
+    # Allow readable values such as ``10485760 # 10 MB`` in .env files.
+    value = value.split("#", 1)[0].strip()
+
+    return cast(value)
+
+
 class Settings:
 
     def __init__(self):
@@ -24,7 +37,7 @@ class Settings:
         self.CHROMA_DIRECTORY = Path(
             os.getenv(
                 "CHROMA_DIRECTORY",
-                "chroma_db"
+                os.getenv("CHROMA_PATH", "chroma_db")
             )
         )
 
@@ -38,39 +51,52 @@ class Settings:
             "gemini-2.5-flash"
         )
 
-        self.CHUNK_SIZE = int(
-            os.getenv(
-                "CHUNK_SIZE",
-                500
-            )
+        self.CHUNK_SIZE = _env_number(
+            "CHUNK_SIZE",
+            800,
+            int
         )
 
-        self.CHUNK_OVERLAP = int(
-            os.getenv(
-                "CHUNK_OVERLAP",
-                100
-            )
+        self.CHUNK_OVERLAP = _env_number(
+            "CHUNK_OVERLAP",
+            150,
+            int
         )
 
-        self.TOP_K = int(
-            os.getenv(
-                "TOP_K",
-                15
-            )
+        self.TOP_K = _env_number(
+            "TOP_K",
+            30,
+            int
         )
 
-        self.MAX_CONTEXT_CHUNKS = int(
-            os.getenv(
-                "MAX_CONTEXT_CHUNKS",
-                8
-            )
+        self.MAX_CONTEXT_CHUNKS = _env_number(
+            "MAX_CONTEXT_CHUNKS",
+            10,
+            int
         )
 
-        self.DISTANCE_THRESHOLD = float(
-            os.getenv(
-                "DISTANCE_THRESHOLD",
-                0.60
-            )
+        self.MAX_CONTEXT_PAGES = _env_number(
+            "MAX_CONTEXT_PAGES",
+            3,
+            int
+        )
+
+        self.MAX_CONTEXT_CHARACTERS = _env_number(
+            "MAX_CONTEXT_CHARACTERS",
+            24000,
+            int
+        )
+
+        self.DISTANCE_THRESHOLD = _env_number(
+            "DISTANCE_THRESHOLD",
+            0.50,
+            float
+        )
+
+        self.MAX_FILE_SIZE = _env_number(
+            "MAX_FILE_SIZE",
+            10 * 1024 * 1024,
+            int
         )
 
         self.UPLOAD_DIRECTORY.mkdir(

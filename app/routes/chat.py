@@ -31,7 +31,8 @@ async def chat(
     try:
 
         return chat_service.ask(
-            question=request.question
+            question=request.question,
+            document_ids=request.document_ids
         )
 
     except Exception as exception:

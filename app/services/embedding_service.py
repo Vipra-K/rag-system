@@ -1,7 +1,5 @@
 from typing import List
 
-from sentence_transformers import SentenceTransformer
-
 from app.exceptions.embedding_exception import (
     EmbeddingGenerationException,
 )
@@ -9,11 +7,28 @@ from app.exceptions.embedding_exception import (
 
 class EmbeddingService:
 
+    _model = None
+
+    QUERY_INSTRUCTION = (
+        "Represent this sentence for searching relevant passages: "
+    )
+
     def __init__(self):
 
-        self.model = SentenceTransformer(
-            "BAAI/bge-small-en-v1.5"
-        )
+        pass
+
+    @classmethod
+    def _get_model(cls):
+
+        if cls._model is None:
+
+            from sentence_transformers import SentenceTransformer
+
+            cls._model = SentenceTransformer(
+                "BAAI/bge-small-en-v1.5"
+            )
+
+        return cls._model
 
     def generate_embedding(
         self,
@@ -22,7 +37,7 @@ class EmbeddingService:
 
         try:
 
-            embedding = self.model.encode(
+            embedding = self._get_model().encode(
 
                 text,
 
@@ -48,7 +63,7 @@ class EmbeddingService:
 
         try:
 
-            embeddings = self.model.encode(
+            embeddings = self._get_model().encode(
 
                 texts,
 
@@ -67,3 +82,12 @@ class EmbeddingService:
             raise EmbeddingGenerationException(
                 f"Failed to generate embeddings: {exception}"
             )
+
+    def generate_query_embedding(
+        self,
+        question: str
+    ) -> List[float]:
+
+        query = f"{self.QUERY_INSTRUCTION}{question.strip()}"
+
+        return self.generate_embedding(query)
